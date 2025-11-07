@@ -1,5 +1,4 @@
 import React, { createContext, useContext } from 'react'
-import "../style.css"
 const themeDefault = {border: '10px solid red'}
 const themeContext = createContext(themeDefault);
 

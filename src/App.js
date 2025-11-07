@@ -1,88 +1,57 @@
-import React, { useState } from 'react'
+import React from 'react'
 import "./style.css"
-import { createStore } from 'redux'
-import { connect, Provider, useDispatch, useSelector } from 'react-redux';
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+import { Provider, useDispatch, useSelector } from 'react-redux';
+
 // import Reducer from './Components/Reducer'
 // import Context from './Components/Context'
 // import CRUD from './Components/CRUD'
 // import Link from './Components/Link';
-
-function reducer(currentState, action) {
-  if(currentState === undefined) {
-    return {
-      number: 1,
-    };
-  }
-
-  const newState = {...currentState};
-  if (action.type === "plus") {
-    newState.number++;
-  }
-  return newState;
-}
-
-const store = createStore(reducer);
+// import ReduxExample from './Components/ReduxExample';
 
 
-function Left1(props) {
-  return (
-    <div>
-      <h1>Left1 </h1>
-      <Left2 />
-    </div>
-  )
-}
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    increment: (state) => {
+      state.value += 1; // Immer가 내부적으로 불변성을 유지해줍니다.
+    },
+    decrement: (state) => {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action) => {
+      state.value += action.payload;
+    },
+  },
+});
 
-function Left2(props) {
-  return (
-    <div>
-      <h1>Left2</h1>
-      <Left3 />
-    </div>
-  )
-}
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
-function Left3(props) {
-  function f(state) {
-    return state.number;
-  }
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer // 'counter'라는 이름으로 리듀서 등록
+  },
+});
 
-  const number = useSelector(f);
-  return (
-    <div>
-      <h1>Left3 : {number}</h1>
-    </div>
-  )
-}
-
-function Right1(props) {
-  return (
-    <div>
-      <h1>Right1</h1>
-      <Right2 />
-    </div>
-  )
-}
-
-function Right2(props) {
-  return (
-    <div>
-      <h1>Right2</h1>
-      <Right3 />
-    </div>
-  )
-}
-
-function Right3(props) {
+function Counter() {
+  // useSelector를 사용하여 Redux 스토어의 상태에 접근합니다.
+  // 여기서는 'counter' 슬라이스의 'value'를 가져옵니다.
+  const count = useSelector((state) => state.counter.value);
+  
+  // useDispatch 훅을 사용하여 액션을 디스패치할 함수를 가져옵니다.
   const dispatch = useDispatch();
+
   return (
     <div>
-      <h1>Right3</h1>
-      <input type="button" value="+" onClick={() => {
-        dispatch({type:"plus"});
-      }} />
+      <button onClick={() => dispatch(increment())}>+</button> {/* increment 액션 디스패치 */}
+      <button onClick={() => dispatch(incrementByAmount(50))}>+5</button> 이런 식으로 payload 전달 가능
+      
+      <span> {count} </span> {/* 현재 count 값 표시 */}
+      
+      <button onClick={() => dispatch(decrement())}>-</button> {/* decrement 액션 디스패치 */}
     </div>
-  )
+  );
 }
 
 export default function App() {
@@ -92,15 +61,10 @@ export default function App() {
       {/* <Link /> */}
       {/* <Context /> */}
       {/* <Reducer /> */}
-      <div id='container'>
-        <h1>Root</h1>
-        <div id="grid">
-          <Provider store={store} >
-            <Left1 />
-            <Right1 />
-          </Provider>
-        </div>
-      </div>
+      {/* <ReduxExample /> */}
+      <Provider store={store}>
+        <Counter />
+      </Provider>
     </div>
   )
 }
