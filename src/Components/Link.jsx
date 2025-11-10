@@ -1,41 +1,34 @@
 import React from 'react'
 import { Route, Routes, NavLink, useParams } from 'react-router-dom'
 import styled from 'styled-components';
-// import CRUD from './Components/CRUD'
 
-const SimpleButton = styled.button`
- color:#fff;
- background-color:#000;
+const Header = styled.header`
+  background-color:#000;
+  ul {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    li {
+      a {
+        display:flex;
+        color:#fff;
+        font-size:14px;
+        padding:20px 4px;
+        &.active {
+          color:red;
+        }
+      }
+    }
+  }
 `
 
-const LargeButton = styled(SimpleButton)`
-  font-size:50px;
-`
 
-const ReactButton = (props) => {
-  return <button className={props.className}>{props.children}</button>
-}
-
-const ReactLargeButton = styled(ReactButton)`
-  font-size:50px;
-`
-
-const PrimaryButton = styled.button`
-  color: ${props => props.primary ? 'blue' : 'red'};
-  background-color: ${props => props.primary ? 'black' : 'green'}
-`
 
 function Home() {
   return (
     <div>
       <h2>Home</h2>
       Home...
-      <SimpleButton>BUTTON</SimpleButton>
-      <LargeButton>Large Button</LargeButton>
-      <ReactButton>REACT</ReactButton>
-      <ReactLargeButton>REACT LARGE</ReactLargeButton>
-      <PrimaryButton>Normal</PrimaryButton>
-      <PrimaryButton $primary>primary</PrimaryButton>
     </div>
   )
 }
@@ -98,21 +91,21 @@ function Contact() {
 
 export default function Link() {
   return (
-    <div>
-      {/* <CRUD /> */}
-      <h1>HELLO REACT ROUTER DOM</h1>
-      <ul>
-        <li><NavLink to="/">Home</NavLink></li>
-        <li><NavLink to="/topics">Topics</NavLink></li>
-        <li><NavLink to="/contact">Contact</NavLink></li>
-      </ul>
+    <>
+      <Header className='header'>
+        <ul>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/topics">Topics</NavLink></li>
+          <li><NavLink to="/contact">Contact</NavLink></li>
+        </ul>
+      </Header>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/topics/*" element={<Topics />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/*" element={'Not Found'} />
       </Routes>
-    </div>
+    </>
   )
 }
 
